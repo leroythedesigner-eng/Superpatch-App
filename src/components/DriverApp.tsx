@@ -495,7 +495,7 @@ export default function DriverApp({
                 <div className="flex-1 pr-6">
                   <h4 className="text-xs font-bold text-white">New Route Manifest Assigned</h4>
                   <p className="text-[10px] text-zinc-400 mt-1 leading-relaxed">
-                    {driverStops.length} unloading drops · {getTotalBags()} bags · Krugersdorp Depot Dispatch
+                    {driverStops.length} unloading drops · {getTotalBags()} bags ({Math.round(getTotalBags() * 0.025 * 10) / 10} t) · Krugersdorp Depot Dispatch
                   </p>
                 </div>
                 <button 
@@ -514,8 +514,9 @@ export default function DriverApp({
                   <span className="text-2xl font-extrabold text-white font-mono">{driverStops.length}</span>
                   <span className="text-[8px] text-zinc-500 font-bold block uppercase tracking-widest mt-1"> drops</span>
                 </div>
-                <div className="bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-center">
-                  <span className="text-2xl font-extrabold text-orange-500 font-mono">{getTotalBags()}</span>
+                <div className="bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-center flex flex-col justify-center">
+                  <span className="text-2xl font-extrabold text-orange-500 font-mono leading-none">{getTotalBags()}</span>
+                  <span className="text-[9px] font-mono text-zinc-400 mt-1.5 leading-none">({Math.round(getTotalBags() * 0.025 * 10) / 10} t)</span>
                   <span className="text-[8px] text-zinc-500 font-bold block uppercase tracking-widest mt-1"> bags</span>
                 </div>
                 <div className="bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-center">

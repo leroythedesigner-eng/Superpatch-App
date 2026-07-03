@@ -15,16 +15,24 @@ import OfficeApp from './components/OfficeApp';
 import DriverApp from './components/DriverApp';
 
 export default function App() {
+  // Run migration if needed BEFORE hooks get their initial state
+  const migrated = localStorage.getItem('superpatch_db_v7_migrated');
+  if (!migrated) {
+    localStorage.setItem('superpatch_db_v7_migrated', 'true');
+    localStorage.setItem('superpatch_office_users', JSON.stringify(INITIAL_OFFICE_USERS));
+    localStorage.setItem('superpatch_drivers', JSON.stringify(INITIAL_DRIVERS));
+    localStorage.setItem('superpatch_items', JSON.stringify(INITIAL_ITEMS));
+    localStorage.setItem('superpatch_production', JSON.stringify(INITIAL_PROD));
+    localStorage.setItem('superpatch_stops', JSON.stringify(INITIAL_STOPS));
+    localStorage.setItem('superpatch_quotes', JSON.stringify(INITIAL_QUOTES));
+    localStorage.setItem('superpatch_daily_productions', JSON.stringify(INITIAL_DAILY_PRODUCTIONS));
+    localStorage.setItem('superpatch_reports_data', JSON.stringify(INITIAL_REPORTS_DATA));
+    localStorage.setItem('superpatch_activity_logs', JSON.stringify(INITIAL_ACTIVITY_LOGS));
+    sessionStorage.removeItem('superpatch_active_session');
+  }
+
   // --- Centralized States & LocalStorage Syncing ---
   const [officeUsers, setOfficeUsers] = useState<OfficeUser[]>(() => {
-    const migrated = localStorage.getItem('superpatch_db_v6_migrated');
-    if (!migrated) {
-      localStorage.setItem('superpatch_db_v6_migrated', 'true');
-      localStorage.setItem('superpatch_office_users', JSON.stringify(INITIAL_OFFICE_USERS));
-      localStorage.setItem('superpatch_drivers', JSON.stringify([]));
-      sessionStorage.removeItem('superpatch_active_session');
-      return INITIAL_OFFICE_USERS;
-    }
     const saved = localStorage.getItem('superpatch_office_users');
     return saved ? JSON.parse(saved) : INITIAL_OFFICE_USERS;
   });

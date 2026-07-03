@@ -715,16 +715,16 @@ export default function OfficeApp({
               <div className="bg-zinc-900 border border-zinc-800/80 p-4 rounded-2xl flex flex-col justify-between">
                 <div>
                   <div className="flex justify-between items-center">
-                    <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">Bags Produced</span>
+                    <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">Asphalt Produced</span>
                     <button 
                       onClick={() => {
-                        const newTargetStr = prompt("Enter new Daily Target (bags):", production.target.toString());
+                        const newTargetStr = prompt("Enter new Daily Target (Tons):", production.target.toString());
                         if (newTargetStr !== null) {
-                          const newTarget = parseInt(newTargetStr) || 0;
+                          const newTarget = parseFloat(newTargetStr) || 0;
                           if (newTarget > 0) {
                             setPTarget(newTarget);
                             setProduction(prev => ({ ...prev, target: newTarget }));
-                            addToast(`Daily target updated to ${newTarget} bags`);
+                            addToast(`Daily target updated to ${newTarget} Tons`);
                           } else {
                             addToast("Please enter a valid target greater than 0", true);
                           }
@@ -738,20 +738,27 @@ export default function OfficeApp({
                     </button>
                   </div>
                   <div className="text-2xl font-extrabold text-white mt-1 font-mono">
-                    {production.balance - production.opening < 0 ? 0 : production.balance - production.opening}
-                    <span className="text-xs text-zinc-500 font-normal"> / {production.target}</span>
+                    {Math.round(((production.balance - production.opening < 0 ? 0 : production.balance - production.opening) / 40) * 100) / 100}
+                    <span className="text-xs text-zinc-500 font-normal"> / {production.target} Tons</span>
                   </div>
                 </div>
                 <div className="mt-3">
                   <div className="w-full bg-zinc-950 h-2 rounded-full border border-zinc-800 overflow-hidden">
                     <div 
                       className="bg-gradient-to-r from-orange-500 to-amber-400 h-full rounded-full transition-all duration-500 shadow-[0_0_12px_rgba(239,68,68,0.4)]"
-                      style={{ width: `${Math.min(100, Math.max(5, ((production.balance - production.opening) / production.target) * 100))}%` }}
+                      style={{ width: `${Math.min(100, Math.max(5, ((((production.balance - production.opening < 0 ? 0 : production.balance - production.opening) / 40) / (production.target || 1)) * 100)))}%` }}
                     ></div>
                   </div>
-                  <span className="text-[10px] text-zinc-500 font-medium block mt-1.5">
-                    {production.hours}h run shift
-                  </span>
+                  <div className="flex justify-between items-center mt-1.5">
+                    <span className="text-[10px] text-zinc-500 font-medium">
+                      {production.hours}h run · {production.balance - production.opening < 0 ? 0 : production.balance - production.opening} bags
+                    </span>
+                    {((production.balance - production.opening < 0 ? 0 : production.balance - production.opening) / 40) > production.target && (
+                      <span className="text-[9px] font-bold text-emerald-400 animate-pulse">
+                        ✨ Bonus: +{Math.round((((production.balance - production.opening) / 40) - production.target) * 100) / 100} t
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -1294,58 +1301,71 @@ export default function OfficeApp({
           </motion.div>
         )}
 
-        {activeTab === 'prod' && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 space-y-4">
-            <h2 className="text-[11px] font-bold tracking-widest text-zinc-500 uppercase px-1 font-mono">Shift Production & Daily Count</h2>
+        {activeTab === 'prod' && (() => {
+          const bagsProduced = Math.max(0, production.balance - production.opening);
+          const tonsProduced = bagsProduced / 40;
+          const progressPercent = Math.min(100, Math.max(5, (tonsProduced / (pTarget || 1)) * 100));
 
-            {/* Active Shift Config & Target Card */}
-            <div className="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">EXPECTED START TIME</span>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <Clock size={12} className="text-orange-500" />
-                    <input 
-                      type="text" 
-                      value={pStartTime}
-                      onChange={(e) => setPStartTime(e.target.value)}
-                      placeholder="e.g. 06:00"
-                      className="w-16 bg-black border border-zinc-800 text-white font-mono text-xs rounded px-2 py-0.5 focus:outline-none focus:border-orange-500 text-center"
-                    />
+          return (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 space-y-4">
+              <h2 className="text-[11px] font-bold tracking-widest text-zinc-500 uppercase px-1 font-mono">Shift Production & Daily Count</h2>
+
+              {/* Active Shift Config & Target Card */}
+              <div className="bg-zinc-900 border border-zinc-800 p-5 rounded-2xl space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">EXPECTED START TIME</span>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <Clock size={12} className="text-orange-500" />
+                      <input 
+                        type="text" 
+                        value={pStartTime}
+                        onChange={(e) => setPStartTime(e.target.value)}
+                        placeholder="e.g. 06:00"
+                        className="w-16 bg-black border border-zinc-800 text-white font-mono text-xs rounded px-2 py-0.5 focus:outline-none focus:border-orange-500 text-center"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">DAILY TARGET</span>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <input 
+                        type="number" 
+                        step="0.1"
+                        value={pTarget}
+                        onChange={(e) => {
+                          const val = parseFloat(e.target.value) || 0;
+                          setPTarget(val);
+                          setProduction(prev => ({ ...prev, target: val }));
+                        }}
+                        className="w-20 bg-black border border-zinc-800 text-white font-mono text-xs rounded px-2 py-0.5 focus:outline-none focus:border-orange-500 text-center"
+                      />
+                      <span className="text-[10px] text-zinc-500">tons</span>
+                    </div>
                   </div>
                 </div>
-                <div>
-                  <span className="text-[9px] font-bold text-zinc-400 tracking-wider uppercase">DAILY TARGET</span>
-                  <div className="flex items-center gap-1.5 mt-1">
-                    <input 
-                      type="number" 
-                      value={pTarget}
-                      onChange={(e) => {
-                        const val = parseInt(e.target.value) || 0;
-                        setPTarget(val);
-                        setProduction(prev => ({ ...prev, target: val }));
-                      }}
-                      className="w-20 bg-black border border-zinc-800 text-white font-mono text-xs rounded px-2 py-0.5 focus:outline-none focus:border-orange-500 text-center"
-                    />
-                    <span className="text-[10px] text-zinc-500">bags</span>
+
+                <div className="pt-2">
+                  <span className="text-[9px] font-bold text-zinc-500 tracking-wider uppercase block mb-1">LIVE PRODUCTION TODAY</span>
+                  <div className="text-3xl font-black font-mono text-orange-500 flex items-baseline gap-2 flex-wrap">
+                    <span>{Math.round(tonsProduced * 100) / 100} Tons</span>
+                    <span className="text-xs text-zinc-500 font-normal">/ {pTarget} ton target</span>
+                    <span className="text-xs text-zinc-400 font-normal">({bagsProduced} bags)</span>
                   </div>
-                </div>
-              </div>
 
-              <div className="pt-2">
-                <span className="text-[9px] font-bold text-zinc-500 tracking-wider uppercase block mb-1">LIVE BAGS MANUFACTURED TODAY</span>
-                <div className="text-3xl font-black font-mono text-orange-500 flex items-baseline gap-2">
-                  {production.balance - production.opening < 0 ? 0 : production.balance - production.opening}
-                  <span className="text-xs text-zinc-500 font-normal">/ {pTarget} target</span>
+                  <div className="w-full bg-zinc-950 h-2.5 rounded-full border border-zinc-850 overflow-hidden mt-3 shadow-inner">
+                    <div 
+                      className="bg-gradient-to-r from-orange-500 to-yellow-400 h-full rounded-full transition-all duration-300"
+                      style={{ width: `${progressPercent}%` }}
+                    ></div>
+                  </div>
+                  {tonsProduced > pTarget && (
+                    <div className="mt-2.5 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 rounded-xl text-xs font-bold animate-pulse flex items-center justify-between">
+                      <span>✨ Daily Target Achieved!</span>
+                      <span>Bonus: +{Math.round((tonsProduced - pTarget) * 100) / 100} Tons</span>
+                    </div>
+                  )}
                 </div>
-
-                <div className="w-full bg-zinc-950 h-2.5 rounded-full border border-zinc-850 overflow-hidden mt-3 shadow-inner">
-                  <div 
-                    className="bg-gradient-to-r from-orange-500 to-yellow-400 h-full rounded-full transition-all duration-300"
-                    style={{ width: `${Math.min(100, Math.max(5, (((production.balance - production.opening) < 0 ? 0 : (production.balance - production.opening)) / (pTarget || 1)) * 100))}%` }}
-                  ></div>
-                </div>
-              </div>
 
               <div className="grid grid-cols-2 gap-4 text-xs pt-2 border-t border-zinc-800/80">
                 <div>
@@ -1454,8 +1474,9 @@ export default function OfficeApp({
                 Log Completed Shift & Sync Reports
               </button>
             </div>
-          </motion.div>
-        )}
+            </motion.div>
+          );
+        })()}
 
         {activeTab === 'pipe' && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="p-4 space-y-4">

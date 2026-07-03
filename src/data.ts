@@ -16,25 +16,25 @@ export const INITIAL_DRIVERS: Driver[] = [
 ];
 
 export const INITIAL_ITEMS: Item[] = [
-  { n: "Bitumen", u: "Litre", cost: 16.3, onHand: 8134, reorder: 5000 },
-  { n: "Solvents", u: "Litre", cost: 18.5, onHand: 5000, reorder: 200 },
-  { n: "Burner Fuel", u: "Litre", cost: 12.77, onHand: 2000, reorder: 1000 },
+  { n: "Bitumen", u: "Litre", cost: 16.3, onHand: 7811.50, reorder: 5000 },
+  { n: "Solvents", u: "Litre", cost: 18.5, onHand: 6980.00, reorder: 200 },
+  { n: "Burner Fuel", u: "Litre", cost: 12.77, onHand: 2955.00, reorder: 1000 },
   { n: "Diesel", u: "Litre", cost: 23, onHand: 0, reorder: 500 },
   { n: "Dust", u: "Kg", cost: 0.75, onHand: 0, reorder: 500 },
-  { n: "Stone 6.7", u: "Ton", cost: 140, onHand: 209.3, reorder: 30 },
-  { n: "Sand", u: "Ton", cost: 304, onHand: 318.86, reorder: 40 },
+  { n: "Stone 6.7", u: "Ton", cost: 140, onHand: 223.27, reorder: 30 },
+  { n: "Sand", u: "Ton", cost: 304, onHand: 313.80, reorder: 40 },
   { n: "Plastic Bags (printed)", u: "Unit", cost: 6.2, onHand: 0, reorder: 3000 },
-  { n: "Plastic Bags (unprinted)", u: "Unit", cost: 5.5, onHand: 1888, reorder: 1000 },
-  { n: "Slurry Bags", u: "Unit", cost: 7, onHand: 750, reorder: 200 },
-  { n: "SS60 Drums", u: "Litre", cost: 45, onHand: 655, reorder: 200 },
+  { n: "Plastic Bags (unprinted)", u: "Unit", cost: 5.5, onHand: 1588.00, reorder: 1000 },
+  { n: "Slurry Bags", u: "Unit", cost: 7, onHand: 750.00, reorder: 200 },
+  { n: "SS60 Drums", u: "Litre", cost: 45, onHand: 660.00, reorder: 200 },
   { n: "SS60 25L", u: "Litre", cost: 48, onHand: 0, reorder: 100 },
   { n: "SS60 5L", u: "Litre", cost: 52, onHand: 0, reorder: 50 },
-  { n: "Pallets", u: "Unit", cost: 60, onHand: 247, reorder: 30 },
+  { n: "Pallets", u: "Unit", cost: 60, onHand: 40.00, reorder: 30 },
 ];
 
 export const INITIAL_PROD: Production = {
   hours: 6,
-  target: 500,
+  target: 90,
   opening: 7166,
   dispatched: 1250,
   balance: 5916,
@@ -45,7 +45,7 @@ export const INITIAL_DAILY_PRODUCTIONS: DailyProduction[] = [
   {
     date: "2026-06-24",
     startTime: "06:00",
-    target: 500,
+    target: 90,
     produced: 320,
     opening: 13960,
     dispatched: 2733,
@@ -57,7 +57,7 @@ export const INITIAL_DAILY_PRODUCTIONS: DailyProduction[] = [
   {
     date: "2026-06-23",
     startTime: "06:00",
-    target: 500,
+    target: 90,
     produced: 480,
     opening: 13500,
     dispatched: 1800,
@@ -69,7 +69,7 @@ export const INITIAL_DAILY_PRODUCTIONS: DailyProduction[] = [
   {
     date: "2026-06-22",
     startTime: "07:30",
-    target: 400,
+    target: 80,
     produced: 350,
     opening: 13200,
     dispatched: 1200,
