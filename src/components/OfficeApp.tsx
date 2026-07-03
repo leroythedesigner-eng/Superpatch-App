@@ -2281,7 +2281,9 @@ export default function OfficeApp({
                         {selectedDayReport.closingStock.toLocaleString()}
                         <span className="text-xs text-zinc-500 font-normal"> bags</span>
                       </div>
-                      <span className="text-[9px] text-zinc-500 block mt-1">25kg asphalt printed sacks</span>
+                      <span className="text-[9px] text-emerald-400 block mt-1 font-bold font-mono">
+                        {Math.round((selectedDayReport.closingStock / 40) * 100) / 100} Tons stock
+                      </span>
                     </div>
 
                     {/* Parameter: Produced */}
@@ -2291,9 +2293,16 @@ export default function OfficeApp({
                         {selectedDayReport.produced.toLocaleString()}
                         <span className="text-xs text-zinc-500 font-normal"> bags</span>
                       </div>
-                      <span className="text-[9px] text-emerald-400 block mt-1 font-bold font-mono">
-                        +{Math.round(selectedDayReport.produced * 0.025 * 10) / 10} Tons mix
-                      </span>
+                      <div className="flex flex-wrap justify-between items-center mt-1">
+                        <span className="text-[9px] text-emerald-400 font-bold font-mono">
+                          +{Math.round((selectedDayReport.produced / 40) * 100) / 100} Tons mix
+                        </span>
+                        {(selectedDayReport.produced / 40) > 90 && (
+                          <span className="text-[8px] font-black text-amber-400 animate-pulse bg-amber-500/10 px-1 py-0.2 rounded border border-amber-500/20">
+                            ✨ Bonus: +{Math.round(((selectedDayReport.produced / 40) - 90) * 100) / 100} t
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     {/* Parameter: Delivered */}
@@ -2303,7 +2312,9 @@ export default function OfficeApp({
                         {selectedDayReport.delivered.toLocaleString()}
                         <span className="text-xs text-zinc-500 font-normal"> bags</span>
                       </div>
-                      <span className="text-[9px] text-zinc-500 block mt-1">Sacks dispatched from depot</span>
+                      <span className="text-[9px] text-emerald-400 block mt-1 font-bold font-mono">
+                        {Math.round((selectedDayReport.delivered / 40) * 100) / 100} Tons dispatched
+                      </span>
                     </div>
 
                     {/* Parameter: Orders Completed */}
@@ -2313,7 +2324,9 @@ export default function OfficeApp({
                         {selectedDayReport.ordersCompleted}
                         <span className="text-xs text-zinc-500 font-normal"> orders</span>
                       </div>
-                      <span className="text-[9px] text-zinc-500 block mt-1">Municipalities & contractors</span>
+                      <span className="text-[9px] text-emerald-400 block mt-1 font-bold font-mono">
+                        {Math.round((selectedDayReport.delivered / 40) * 100) / 100} Tons completed
+                      </span>
                     </div>
 
                     {/* Parameter: Delivery Distance */}
