@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Superpatch App",
+  "description": "Manufacturing and delivery dispatch command center for Superpatch Krugersdorp, featuring real-time stock logging, batch tracking, and interactive driver proof-of-delivery tools.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
